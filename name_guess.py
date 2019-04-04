@@ -63,12 +63,12 @@ def guessStrike(player):
         x = player
         y = 0
     else:
-        x = player//10
-        y = player%10
+        x = player%10
+        y = player//10
     strike.up()
-    strike.goto(-52 +x*10,30-y*10)
+    strike.goto(-51 +x*10,(30-y*10)+3)
     strike.down()
-    strike.forward(4)
+    strike.forward(5)
 
 def game_progression():
     levels=[1,2,3,4,5,6,7,8,9,10]
