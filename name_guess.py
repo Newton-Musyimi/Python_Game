@@ -10,46 +10,39 @@ lly = -100
 urx = 200
 ury = 100
 game_board.setworldcoordinates(llx,lly,urx,ury)
+
 menu = tr.Turtle() #creates our first turtle which will be used to provide feedback to the player
 menu.color("white")
 menu.up() #raises the turtle off the board
 menu.ht() #hides the turtle and provides the player with a distraction free board
+
 elements = tr.Turtle() #a turtle to display game elements on the board
+elements.color("white")
 elements.up() #raises the elements turtle off the board
 elements.ht() #hides the elements turtle
-elements.color("white")
+ 
 state = tr.Turtle()
 state.color("white")
 state.ht()
 state.up()
+
 strike = tr.Turtle()
 strike.color("white")
 strike.ht()
-def level_gen(i,levels):
+def level_gen(i,levels): #the function that generates the game levels
     level=levels[i]
     return level
-def guess_value(level_upper):
+def guess_value(level_upper): #the function that generates the random number
     guess=random.randrange(0,level_upper)
     return guess
-def  menu_gen(level, guesses):
+def  menu_gen(level, guesses): #the function that generates the game menu
     menu.clear()
     menu.goto((llx+3),ury-3)
     menu.write("LEVEL: "+str(level))
     menu.goto((llx+3),(ury-7))
     menu.write("GUESSES: "+str(guesses))
     return level, guesses
-
-"""def numbers(level):
-    elements.up()
-    for i in range(10):
-        for j in range((level-1)*10,level*10):
-            elements.goto(-50+(10*i),30-(6*(level-1)))
-            elements.write(j)
-       # for j in range(((level-1)*10),level_upper):
-
-    #elements.goto(-15,20-(4*i))
-"""
-def numbers(level,y_index):
+def numbers(level,y_index): #the function that writes out the numbers onto the game board
     elements.penup()
     for num in range((level-1)*10,level*10):
         if num< 10:
@@ -58,19 +51,18 @@ def numbers(level,y_index):
             location = num%10
         elements.goto(-50 +location*10,y_index)
         elements.write(num)
-def guessStrike(player):
+def guessStrike(player): #the function that crosses out a number when the user types it in
     if player< 10:
         x = player
         y = 0
     else:
-        x = player//10
-        y = player%10
+        x = player%10
+        y = player//10
     strike.up()
-    strike.goto(-52 +x*10,30-y*10)
+    strike.goto(-51 +x*10,(30-y*10)+3)
     strike.down()
-    strike.forward(4)
-
-def game_progression():
+    strike.forward(5)
+def game_progression(): #the function that runs the entire game
     levels=[1,2,3,4,5,6,7,8,9,10]
     guesses = 4
     game_over = False
@@ -90,7 +82,6 @@ def game_progression():
                 state.write("Congratulations, you proceed!!")
                 strike.clear()
                 game_over = False
-                break
             elif guesses > 0 and level < 10 and player < guess:
                 guesses -= 1
                 guessStrike(player)
@@ -104,7 +95,9 @@ def game_progression():
                 state.goto(-50,50)
                 state.write("Sorry, try a smaller number")
             elif guesses == 0:
-                print("GAME OVER, YOU LOSE!!!")
+                state.clear()
+                state.goto(-50,50)
+                state.write("GAME OVER, YOU LOSE!!!")
                 game_over = True
                 game = "lose"
             elif level==10 and player!=guess and player<guess:
@@ -120,15 +113,22 @@ def game_progression():
                 state.goto(-50,50)
                 state.write("Sorry, try a smaller number")
             elif player==guess and level==10:
-                print("YOU WIN!")
+                state.clear()
+                state.goto(-50,50)
+                state.write("YOU WIN!")
                 game = "win"
                 game_over = True
-    return game
+        return game
 
-def main():
+def main(): #the main function
     game = "neutral"
-    if game == "lose":
-        return
+    if game == "win":
+        start = game_board.input("would you like to play again?","(Type in Y for yes and N for no) :")
+        start = start.upper()
+        if start == "Y":
+            game=game_progression()
+        else:
+            return
     else:
         while game != "win":
             game = game_progression()
