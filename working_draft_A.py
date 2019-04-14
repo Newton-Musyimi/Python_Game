@@ -15,20 +15,25 @@ menu = tr.Turtle() #creates our first turtle which will be used to provide feedb
 menu.color("white")
 menu.up() #raises the turtle off the board
 menu.ht() #hides the turtle and provides the player with a distraction free board
+menu.speed(10)
 
 elements = tr.Turtle() #a turtle to display game elements on the board
 elements.color("white")
 elements.up() #raises the elements turtle off the board
 elements.ht() #hides the elements turtle
- 
+elements.speed(10)
+
 state = tr.Turtle() #a turtle to write the game states
 state.color("white")
 state.ht() #hides the turtle
 state.up() #raises the turtle
+state.speed(10)
 
 strike = tr.Turtle() #a turtle to strike through wrongly selected numbers
 strike.color("white")
 strike.ht() #hides the turtle
+strike.speed(10)
+
 def level_gen(i,levels): #the function that generates the game levels
     level=levels[i] #selects the level from the list of levels
     return level #returns the level
@@ -126,7 +131,7 @@ def main(): #the main function
     game = "" #blank string to store the value of the game state
     while game!="win":
         game=game_progression()
-    start = game_board.textinput("would you like to play again?","(Type in Y for yes and N for no) :")
+    start = game_board.textinput("Play again?","(Type in Y for yes and N for no) :")
     start = start.upper()
     if start == "Y":
         game=game_progression()
