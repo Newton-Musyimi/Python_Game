@@ -61,12 +61,32 @@ def guessStrike(player): #the function that crosses out a number when the user t
         x = player
         y = 0
     else: #runs if the number is bigger than or equal to 10
-        x = player%10 #gets the oneth value of a number
-        y = player//10 #gets the tenth value of a number
+        x = player%10
+        y = player//10
     strike.up()
     strike.goto(-51 +x*10,(30-y*10)+3) #goes to the location of the number the player inputs
     strike.down()
     strike.forward(5) #strikes through the number
+def player_evaluation(guess,player,guesses):
+    if player==guess:
+        guesses += 4
+        state.clear()
+        state.goto(-50,50)
+        state.write("Congratulations, you proceed!!")
+        strike.clear()
+    elif player < guess:
+        guesses -= 1
+        guessStrike(player)
+        state.clear()
+        state.goto(-50,50)
+        state.write("Sorry, try a bigger number")
+    elif player>guess:
+        guesses -= 1
+        guessStrike(player)
+        state.clear()
+        state.goto(-50,50)
+        state.write("Sorry, try a smaller number")
+    return guesses
 def game_progression(): #the function that runs the entire game
     levels=[1,2,3,4,5,6,7,8,9,10] #the levels are stored in a list
     guesses = 4 #the number of guesses is predefined
@@ -77,34 +97,18 @@ def game_progression(): #the function that runs the entire game
         y_index = 30-((level-1)*10)
         numbers(level, y_index) #calls the function to write down the numbers for each level on the game board
         guess = guess_value(level_upper) #assigns the randomly generated number
-        #print(guess)
+        print(guess)
         while guesses >= 0 and game_over ==False: #a while loop that runs as long as the number of guesses is greater than 0 and the value of the boolean variable is False
             menu_gen(level,guesses) #calls the menu function that writes the menu on the game board
             maxi = level_upper - 1 #assigns the maximum number that can be accepted by the level
             player = int(game_board.numinput("What is the number generated? ","Enter your guess: ",0,0,maxi)) #prompts the player to enter a guess
-            if player==guess and level<10: #conditional for when the player guesses correctly
-                guesses += 4
-                state.clear()
-                state.goto(-50,50)
-                state.write("Congratulations, you proceed!!") #writes a message on the game window
-                strike.clear()
+            if guesses>0 and level<10:
+                guesses = player_evaluation(guess,player,guesses)
                 break
-            elif guesses > 0 and level < 10 and player < guess: #when the player's guess is lower
-                guesses -= 1
-                guessStrike(player)
+            elif guesses == 0:
                 state.clear()
                 state.goto(-50,50)
-                state.write("Sorry, try a bigger number") #writes a message on the game window
-            elif guesses>0 and level<10 and player>guess: #when the player's guess is higher
-                guesses -= 1
-                guessStrike(player)
-                state.clear()
-                state.goto(-50,50)
-                state.write("Sorry, try a smaller number") #writes a message on the game window
-            elif guesses == 0: #when the player runs out of guesses
-                state.clear()
-                state.goto(-50,50)
-                state.write("GAME OVER, YOU LOSE!!!") #writes a message on the game window
+                state.write("GAME OVER, YOU LOSE!!!")
                 game_over = True
                 game = "lose"
                 break
@@ -113,35 +117,40 @@ def game_progression(): #the function that runs the entire game
                 guessStrike(player)
                 state.clear()
                 state.goto(-50,50)
-                state.write("Sorry, try a bigger number") #writes a message on the game window
+                state.write("Sorry, try a bigger number")
+                continue
             elif level==10 and player!=guess and player>guess:
                 guesses-=1
                 guessStrike(player)
                 state.clear()
                 state.goto(-50,50)
-                state.write("Sorry, try a smaller number") #writes a message on the game window
-            elif player==guess and level==10: #when the player completes the final level
+                state.write("Sorry, try a smaller number")
+                continue
+            elif player==guess and level==10:
+                state.clear()
+                state.goto(-50,50)
+                state.write("YOU WIN!")
                 game = "win"
                 game_over = True
                 break
-    state.clear()
-    elements.clear()
-    strike.clear()
-    return game #returns the value of game to the calling function
+            continue
+    return game
 
 def main(): #the main function
     game = "" #blank string to store the value of the game state
-    while game!="win": #a loop that runs as long as the value of game is not "win"
-        game=game_progression() #calls the game_progression() function that runs the game
-    start = game_board.textinput("YOU WIN! Play again?","Y for yes / N for no:")
+    while game!="win":
+        game=game_progression()
+    start = game_board.textinput("Play again?","(Type in Y for yes and N for no) :")
     start = start.upper()
     if start == "Y":
-        game=game_progression() #calls the game_progression() function that runs the game
+        state.clear()
+        elements.clear()
+        strike.clear()
+        game=game_progression()
     else:
-        menu.clear()
         state.clear()
         state.goto(-50,50)
         state.write("CLICK ON THE SCREEN TO CLOSE THE WINDOW")
-        game_board.exitonclick() #allows the player to close the game window by clicking on the screen
+        game_board.exitonclick()
 if __name__ == "__main__":
     main()
