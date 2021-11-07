@@ -21,6 +21,7 @@ elements.color("white")
 elements.up() #raises the elements turtle off the board
 elements.ht() #hides the elements turtle
  
+
 state = tr.Turtle() #a turtle to write the game states
 state.color("white")
 state.ht() #hides the turtle
@@ -42,6 +43,18 @@ def  menu_gen(level, guesses): #the function that generates the game menu
     menu.goto((llx+3),(ury-7))
     menu.write("GUESSES: "+str(guesses)) #writes the number of guesses left in the game
     return level, guesses
+
+"""def numbers(level):
+    elements.up()
+    for i in range(10):
+        for j in range((level-1)*10,level*10):
+            elements.goto(-50+(10*i),30-(6*(level-1)))
+            elements.write(j)
+       # for j in range(((level-1)*10),level_upper):
+
+    #elements.goto(-15,20-(4*i))
+"""
+
 def numbers(level,y_index): #the function that writes out the numbers onto the game board
     elements.penup()
     for num in range((level-1)*10,level*10):
@@ -83,7 +96,8 @@ def game_progression(): #the function that runs the entire game
                 state.goto(-50,50)
                 state.write("Congratulations, you proceed!!")
                 strike.clear()
-                break
+                game_over = False
+                #break
             elif guesses > 0 and level < 10 and player < guess:
                 guesses -= 1
                 guessStrike(player)
@@ -102,6 +116,7 @@ def game_progression(): #the function that runs the entire game
                 state.write("GAME OVER, YOU LOSE!!!")
                 game_over = True
                 game = "lose"
+                return game
             elif level==10 and player!=guess and player<guess:
                 guesses-=1
                 guessStrike(player)
@@ -119,8 +134,8 @@ def game_progression(): #the function that runs the entire game
                 state.goto(-50,50)
                 state.write("YOU WIN!")
                 game = "win"
-                game_over = True
-    return game
+                game_over = True                
+                return game
 
 def main(): #the main function
     game = "" #blank string to store the value of the game state
